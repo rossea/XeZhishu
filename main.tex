@@ -1,0 +1,334 @@
+% Tex! = xelatex
+\documentclass{ctexbook}
+\usepackage{hyperref}
+\usepackage{titletoc}
+\usepackage{zhnumber}
+\usepackage{fontawesome}
+\usepackage{tikz}
+\usepackage{ruby}
+%\usepackage{emptypage} %不显示空白页页码
+\usepackage{geometry}
+\geometry{xetex,twoside,landscape,left=2cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={2mm}}
+%% 边注的宽度由长度\marginparwidth控制，与正文之间的水平距离由\marginparsep决定。
+%% asymmetric参数控制左边距和右边距不会因翻页而互换。asymmetric=true表示不互换，以保证twoside模式下，头注边距的一致性。且为了页面上下对称，应满足 top = left - marginparwidth = right
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{gezhu}
+\expandafter\everywithgezhu\expandafter{\the\everywithgezhu}
+  \everygezhu{\fontsize{11}{1}\selectfont \color{blue}} \setgezhuraise{-3.5pt}
+  %\gezhuraggedture　%%「」换为 ﹁﹂
+\usepackage{marginnote}
+\usepackage{endnotes}
+\renewcommand{\notesname}{
+\begin{flushleft}
+  【尾注】
+\end{flushleft}}
+\makeatletter
+\newskip\@endindent
+\@endindent=1em
+\long\def\@makeentext#1{\@setpar{\@@par\@tempdima \hsize
+\advance\@tempdima-\@endindent
+\parshape \@ne \@endindent \@tempdima}\par
+\noindent \hbox to \z@{\hss\@theenmark\hspace{0.2em}}#1}
+\renewcommand\theendnote{\myendnotestyle{\arabic{endnote}}}
+\def\@makeenmark{\hbox{\textsuperscript{\@theenmark}}}%正文中脚注标签采取上标形式
+\usepackage{pifont}
+\newcommand\myendnotestyle[1]{\ifcase#1 \or \ding{192}\or \ding{193}\or
+\ding{194}\or \ding{195}\or \ding{196}\or \ding{197}%
+\or \ding{198}\or \ding{199}\or \ding{200}\or \ding{201}\else *\fi\relax}%数字单纯带圈，正常数字
+\makeatother
+
+\usepackage{subfig,graphicx}
+% \usepackage{varwidth} %% 提供 varwidth 环境
+% \ctexset{
+% chapter/name = {第,回},
+% chapter/titleformat = \chaptertitleformat
+% }
+% \newcommand\chaptertitleformat[1]{%% 以标题内容为参数
+% \begin{varwidth}[t]{.7\linewidth}#1\end{varwidth}}
+
+\usepackage{color}
+%\usepackage{setspace}
+
+\makeatletter
+%endnotes%
+\def\enoteheading{\section*{\notesname
+  \@mkboth{\MakeUppercase{\notesname}}{\MakeUppercase{\notesname}}}%
+  \mbox{}\par\vskip-2.3\baselineskip\noindent\rule{.5\textwidth}{0.4pt}\par\vskip\baselineskip}
+\makeatletter
+
+
+\makeatletter 
+% 删除宏包marginnote中的margintest命令在twoside模式下奇数偶数页的边注位置判断
+\renewcommand*{\@mn@margintest}{%
+  \expandafter\ifx\csname @mn@thispage\endcsname\@empty
+    \gdef\@mn@atthispage{1}%
+  \else\expandafter\ifnum \@mn@thispage=\value{mn@abspage}%
+      \begingroup
+        \@tempcnta\@mn@atthispage\advance\@tempcnta by \@ne
+        \xdef\@mn@atthispage{\the\@tempcnta}%
+      \endgroup
+    \else
+      \gdef\@mn@atthispage{1}%
+    \fi
+  \fi
+  \xdef\@mn@thispage{\themn@abspage}%
+  \let\@mn@currpage\relax
+  \let\@mn@currxpos\relax
+  \mn@savepos
+  \protected@write\@auxout{\let\themn@abspage\relax}{%
+    \string\newmarginnote{note.\@mn@thispage.\@mn@atthispage}{%
+      {\themn@abspage}{\noexpand\number\mn@lastxpos sp}}%
+  }%
+  \expandafter\ifx\csname mn@note.\@mn@thispage.\@mn@atthispage\endcsname\relax
+    \if@twoside
+      \if@mn@verbose
+        \PackageInfo{marginnote}{Suggest that margin
+          note \@mn@thispage.\@mn@atthispage\space will be on\MessageBreak
+          absolute page \themn@abspage.\MessageBreak
+          This may be wrong}%
+      \fi
+      \ifodd\value{mn@abspage}\@tempswatrue\else\@tempswafalse\fi
+    \else
+      \if@mn@verbose
+        \PackageInfo{marginnote}{right page because not two side mode}%
+      \fi
+      \@tempswatrue
+    \fi
+  \else
+    \edef\@mn@currpage{\csname
+      mn@note.\@mn@thispage.\@mn@atthispage\endcsname}%
+    \edef\@mn@currxpos{\expandafter\@secondoftwo\@mn@currpage}%
+    \ifx\@mn@currxpos\@empty\else
+      \edef\@mn@currxpos{\the\dimexpr \@mn@currxpos -\hoffset\relax}%
+      \begingroup\expandafter\expandafter\expandafter\endgroup
+      \expandafter\ifx\csname pdfhorigin\endcsname\relax\else
+        \begingroup\expandafter\expandafter\expandafter\endgroup
+        \expandafter\ifx\csname pdfoutput\endcsname\relax
+          \begingroup\expandafter\expandafter\expandafter\endgroup
+          \expandafter\ifx\csname outputmode\endcsname\relax\else
+            \ifnum \outputmode=1 %
+              \edef\@mn@currxpos{\the\dimexpr \@mn@currxpos -\pdfhorigin
+                +1in\relax}%
+            \fi
+          \fi
+        \else
+          \ifnum \pdfoutput=1 %
+            \edef\@mn@currxpos{\the\dimexpr \@mn@currxpos -\pdfhorigin
+              +1in\relax}%
+          \fi
+        \fi
+      \fi
+      \ifdefined\mn@pagewidth
+        \@mn@if@RTL{%
+          \PackageInfo{marginnote}{Margin note
+            \@mn@thispage.\@mn@atthispage\space in RTL mode}%
+          \edef\@mn@currxpos{%
+            \the\dimexpr\mn@pagewidth-\@mn@currxpos\relax
+          }%
+        }{}%
+      \fi
+    \fi
+    \edef\@mn@currpage{\expandafter\@firstoftwo\@mn@currpage}%
+    \if@mn@verbose
+      \PackageInfo{marginnote}{Margin note \@mn@thispage.\@mn@atthispage\space
+        is on absolute page \@mn@currpage}%
+    \fi
+    % \if@twoside
+    %   \ifodd\@mn@currpage\relax
+    %     \@tempswatrue
+    %     \if@twocolumn
+    %       \ifdim \@mn@currxpos
+    %              < \dimexpr\oddsidemargin+\columnwidth+\columnsep\relax
+    %         \@tempswafalse
+    %       \fi
+    %     \fi
+    %   \else
+    %     \@tempswafalse
+    %     \if@twocolumn
+    %       \ifdim\@mn@currxpos>\dimexpr\evensidemargin+\columnwidth\relax
+    %         \@tempswatrue
+    %       \fi
+    %     \fi
+    %   \fi
+    % \else
+    %   \if@mn@verbose
+    %     \PackageInfo{marginnote}{right page because not two side mode}%
+    %   \fi
+    %   \@tempswatrue
+    %   \if@twocolumn
+    %     \ifdim \@mn@currxpos
+    %            < \dimexpr\oddsidemargin+\columnwidth+\columnsep\relax
+    %       \@tempswafalse
+    %     \fi
+    %   \fi
+    % \fi
+  \fi
+}
+\renewcommand{\footnotesize}{\normalsize}
+\makeatletter
+
+\makeatletter
+% 设置宏包fancyhdr中的fancyplain的页眉分割线宽度为0pt（即不显示分割线）
+\def\headrulewidth{0pt}%
+\makeatletter
+
+\let\oldmarginnote\marginnote
+% \renewcommand\marginpar[1]{\-\oldmarginpar[\raggedleft\footnotesize #1]%
+% {\raggedright\color{red}\footnotesize #1}} % 
+% \marginparsep = 10pt %与正文间隔10pt
+\renewcommand\marginnote[1]{\-\oldmarginnote[\raggedright\color{red}\footnotesize #1]%
+{\raggedright\color{red}\footnotesize #1}} % 注释文字用红色footnote 大小
+
+%\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\chaptermark}[1]{\markright{#1}}
+
+\renewcommand{\rightmark}{\@title}
+
+\fancypagestyle{fancyplain}{
+\fancyhf{}
+\fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}前言}
+\fancyhead[ER]{\thepage}
+\fancyfoot[OL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\rightmark}
+\fancyfoot[OR]{\thepage}
+}
+%\newskip\sepskip
+
+
+\fancypagestyle{maintext}{
+\fancyhf{}
+\fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\leftmark}
+\fancyhead[ER]{\thepage}
+\fancyfoot[OL]{{~}\rightmark}
+\fancyfoot[OR]{\thepage}
+}
+
+\fancypagestyle{fancy}{
+\fancyhf{}
+\fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\leftmark}
+\fancyhead[ER]{\thepage}
+\fancyfoot[OL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\rightmark}
+\fancyfoot[OR]{\thepage}
+}
+
+\fancypagestyle{plain}{}
+
+\defaultCJKfontfeatures{RawFeature={vertical:+vert:+vhal}}
+\AtBeginShipout{%
+  \global\setbox\AtBeginShipoutBox\vbox{%
+    \special{pdf: put @thispage <</Rotate 90>>}%
+    \box\AtBeginShipoutBox
+  }%
+
+}%
+
+\setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}
+
+\punctstyle{kaiming}
+\newcommand*\CJKmovesymbol[1]{\raise.32em\hbox{#1}}
+\newcommand*\CJKmovepunctsymbol[1]{\raise.6em\hb@xt@\z@{\hss#1}}
+%\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null} 
+\newcommand*\CJKmove{
+  
+  \xeCJKnobreakbetweenpuncts
+  \let\CJKsymbol\CJKmovesymbol
+  \let\CJKpunctsymbol\CJKsymbol
+  } %修正baseline
+\AtBeginDocument{\CJKmove \sloppy}
+
+
+
+\pagenumbering{chinese}
+%\dottedcontents{chapter}[0em]{\normalsize}{4.0em}{6pt}
+\titlecontents{chapter}[1cm]{\fontsize{14pt}%
+{\baselineskip}\selectfont}{\hspace*{3em}\contentslabel{4em}\ }%
+{}{\titlerule*[0.5pc]%
+{$\cdot$}\contentspage\hspace*{1cm}}%
+%titletoc宏包，它与titlesec宏包的文档写在同一个pdf文件中。
+
+%\dottecontents{section}[left]{above-code}{label-width}{leader-width}
+%\titlecontents{section}[left]{above-code}{numbered-entry-format}{numberless-entry-format}{filler-page-format}[below-code]
+
+%各参数的含义如下所示：
+%section:目录对象，可以填 chapter 、section，或者figure、table。
+%left:目录对象左侧到左页边区的距离，一般必选。
+%above-code:格式调整命令，可以包含垂直对象，也可以用\contentslabel，即指定本级别目录标签箱子的宽度。
+%label-width:标签宽。
+%leader-width:填充符号宽，默认的填充符号是圆点。
+%numbered-entry-format:如果有标签，表示在目录文本前输入的格式。
+%numberless-entry-format:没有标签时输入的格式。
+%filler-page-format:填充格式，一般借助titlesec中的\titlerule*[width]{text}命令。
+%below-code:在entry之后输入的格式，比如垂直空距。
+
+\setlength{\parindent}{0pt} 
+\setlength{\headheight}{15.7301pt}
+\linespread{.9} %ctex定义的行距倍数
+
+
+\title{脂硯齋重評石頭記}
+\author{清\quad 曹雪芹}
+\date{}
+%\authorfn{庚辰本}
+
+%%%%%%	自定義的公式 示例
+
+\newcommand\sampleEq{%
+  \left(\int_0^\infty \frac{\sin x}{\sqrt{x}}dx\right)^2
+  = \sum_{k=0}^\infty \frac{(2k)!}{2^{2k}(k!)^2} \frac{1}{2k+1}
+  = \prod_{k=1}^\infty \frac{4k^2}{4k^2-1}
+  \neq \frac{\pi}{2015}}
+
+%%%%%%	自定義的公式 示例（結束）
+\begin{document}
+% \begin{titlepage}
+%   \thispagestyle{empty} %封面不显示页码和页眉页脚
+%   \vspace*{10mm}
+%   \noindent{\Huge 群书治要考译}
+%   \vfill
+%   \begin{flushright}
+%     {\Large 魏{~~~}征{~}虞世南{~}褚遂良{~}等撰}
+%   \end{flushright}
+%   \par
+%   \begin{flushright}
+%     {\Large 吕效祖{~}赵保玉{~}张耀武{~}主编}
+%   \end{flushright} 
+% \end{titlepage}
+\begin{titlepage}
+  \pagestyle{empty} %封面不显示页码和页眉页脚
+  \vspace*{10mm}
+  \noindent{\Huge \@title}
+  \vfill
+  \begin{flushright}
+    {\Large \@author}
+  \end{flushright}
+\end{titlepage}
+
+\pagestyle{plain}
+\setcounter{page}{1}
+\fontsize{18}{30}\selectfont
+\tableofcontents
+
+% \clearpage
+% \newpage
+\pagestyle{fancyplain}
+\setcounter{page}{1}
+\begin{withgezhu}
+%\input{text/foreword.tex}
+\input{text/testtext.tex}
+\end{withgezhu}
+
+\newgeometry{twoside,left=8cm,right=2cm,asymmetric=true,marginparwidth={6cm},marginparsep={2mm}}
+
+\newpage
+\clearpage
+\pagestyle{maintext}
+{\renewcommand\baselinestretch{1.1}\selectfont
+\begin{withgezhu}
+\setcounter{page}{1}
+
+%\input{text/bodytext1.tex}
+\input{text/testtext1.tex}
+\end{withgezhu}
+%\restoregeometry
+\end{document}
+
