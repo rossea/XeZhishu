@@ -11,7 +11,7 @@ latex中文直书目前主要使用uplatex和xelatex。uplatex基于日文直排
 3.包含全角、半角符号的割注换行后，字间距无法控制。
 
 # 编译环境
-*XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021)
-*使用fontawesome字体显示特殊符号
-*主要字体使用SimSun。后备字体为SimSun-ExtB
-*需要编译两边：xelatex main && xelatex main
+* XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021)
+* 使用fontawesome字体显示特殊符号
+* 主要字体使用SimSun。后备字体为SimSun-ExtB
+* 需要编译两边：xelatex main && xelatex main
