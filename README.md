@@ -8,3 +8,8 @@ latex中文直书目前主要使用uplatex和xelatex。uplatex基于日文直排
 1、头注不能跨页排版，需要手工调整。
 2、尾注的分割线无法删除。
 3、包含全角、半角符号的割注换行后，字间距无法控制。
+
+编译环境
+texlive2021
+使用fontawesome字体显示特殊符号
+主要字体使用SimSun，后备字体为SimSun-ExtB
