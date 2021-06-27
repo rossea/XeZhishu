@@ -1,5 +1,7 @@
 % Tex! = xelatex
 \documentclass{ctexbook}
+
+%\usepackage{showframe}
 \usepackage{hyperref}
 \usepackage{titletoc}
 \usepackage{zhnumber}
@@ -8,7 +10,7 @@
 \usepackage{ruby}
 %\usepackage{emptypage} %不显示空白页页码
 \usepackage{geometry}
-\geometry{xetex,twoside,landscape,left=2cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={10mm}}
+\geometry{xetex,twoside,landscape,left=2cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
 %% 边注的宽度由长度\marginparwidth控制，与正文之间的水平距离由\marginparsep决定。
 %% asymmetric参数控制左边距和右边距不会因翻页而互换。asymmetric=true表示不互换，以保证twoside模式下，头注边距的一致性。且为了页面上下对称，应满足 top = left - marginparwidth = right
 \usepackage{indentfirst}
@@ -40,14 +42,17 @@
 
 \usepackage{subfig,graphicx}
 % \usepackage{varwidth} %% 提供 varwidth 环境
-% \ctexset{
-% chapter/name = {第,回},
-% chapter/titleformat = \chaptertitleformat
-% }
+\ctexset{
+chapter/name = {第,回},
+chapter/format = \LARGE,
+chapter/fixskip = true,
+chapter/beforeskip = 0pt,
+chapter/afterskip = 12pt
+}
 % \newcommand\chaptertitleformat[1]{%% 以标题内容为参数
 % \begin{varwidth}[t]{.7\linewidth}#1\end{varwidth}}
 
-\usepackage{color}
+\usepackage{color,xcolor}
 %\usepackage{setspace}
 
 \makeatletter
@@ -263,7 +268,7 @@
 \setlength{\parindent}{0pt} 
 \setlength{\headheight}{15.7301pt}
 \linespread{.9} %ctex定义的行距倍数
-
+\setlength{\parskip}{0pt}
 
 \title{脂硯齋重評石頭記}
 \author{清\quad 曹雪芹}
@@ -279,6 +284,79 @@
   \neq \frac{\pi}{2015}}
 
 %%%%%%	自定義的公式 示例（結束）
+\usepackage[pages=some, scale=1,,angle=90]{background}
+
+%\usepackage{ifthen}
+%\AddEverypageHook{%
+% \ifthenelse{\isodd{\value{page}}}%
+% {
+  \backgroundsetup{
+  %angle=90,
+  %position={0,0},
+  contents={%
+  \begin{tikzpicture}[color={red}, remember picture, overlay]
+    \draw[-,line width=4pt] (-7.175,6.9)--(8.475,6.9);%画外框
+    \draw[-,line width=4pt] (-7.175,-12.3)--(8.475,-12.3);
+    \draw[-,line width=4pt] (-7.1,6.83)--(-7.1,-12.23);
+    \draw[-,line width=4pt] (8.4,6.83)--(8.4,-12.23);
+    %
+    \draw[-,line width=1pt] (-6.9,6.7)--(8.2,6.7);%画内框
+    \draw[-,line width=1pt] (-6.9,-12.1)--(8.2,-12.1);
+    \draw[-,line width=1pt] (-6.9,6.7)--(-6.9,-12.1);
+    \draw[-,line width=1pt] (8.2,6.7)--(8.2,-12.1);
+    %
+    \draw[-,line width=1pt] (-5.73846153846154,6.7)--(-5.73846153846154,-12.1);
+    \draw[-,line width=1pt] (-4.57692307692308,6.7)--(-4.57692307692308,-12.1);
+    \draw[-,line width=1pt] (-3.41538461538462,6.7)--(-3.41538461538462,-12.1);
+    \draw[-,line width=1pt] (-2.25384615384616,6.7)--(-2.25384615384616,-12.1);
+    \draw[-,line width=1pt] (-1.09230769230769,6.7)--(-1.09230769230769,-12.1);
+    \draw[-,line width=1pt] (0.0692307692307672,6.7)--(0.0692307692307672,-12.1);
+    \draw[-,line width=1pt] (1.23076923076923,6.7)--(1.23076923076923,-12.1);
+    \draw[-,line width=1pt] (2.39230769230769,6.7)--(2.39230769230769,-12.1);
+    \draw[-,line width=1pt] (3.55384615384615,6.7)--(3.55384615384615,-12.1);
+    \draw[-,line width=1pt] (4.71538461538461,6.7)--(4.71538461538461,-12.1);
+    \draw[-,line width=1pt] (5.87692307692307,6.7)--(5.87692307692307,-12.1);
+    \draw[-,line width=1pt] (7.03846153846153,6.7)--(7.03846153846153,-12.1);          
+  \end{tikzpicture}
+  }
+}%
+%}
+% {
+%   \backgroundsetup{
+%   %angle=90,
+%   %position={0,0},
+%   contents={%
+%   \begin{tikzpicture}[color={red}, remember picture, overlay]
+%     \draw[-,line width=4pt] (-7.175,6.9)--(8.475,6.9);%画外框
+%     \draw[-,line width=4pt] (-7.175,-12.3)--(8.475,-12.3);
+%     \draw[-,line width=4pt] (-7.1,6.83)--(-7.1,-12.23);
+%     \draw[-,line width=4pt] (8.4,6.83)--(8.4,-12.23);
+%     %
+%     \draw[-,line width=1pt] (-6.9,6.7)--(8.2,6.7);%画内框
+%     \draw[-,line width=1pt] (-6.9,-12.1)--(8.2,-12.1);
+%     \draw[-,line width=1pt] (-6.9,6.7)--(-6.9,-12.1);
+%     \draw[-,line width=1pt] (8.2,6.7)--(8.2,-12.1);
+%     %
+%     \draw[-,line width=1pt] (-5.73846153846154,6.7)--(-5.73846153846154,-12.1);
+%     \draw[-,line width=1pt] (-4.57692307692308,6.7)--(-4.57692307692308,-12.1);
+%     \draw[-,line width=1pt] (-3.41538461538462,6.7)--(-3.41538461538462,-12.1);
+%     \draw[-,line width=1pt] (-2.25384615384616,6.7)--(-2.25384615384616,-12.1);
+%     \draw[-,line width=1pt] (-1.09230769230769,6.7)--(-1.09230769230769,-12.1);
+%     \draw[-,line width=1pt] (0.0692307692307672,6.7)--(0.0692307692307672,-12.1);
+%     \draw[-,line width=1pt] (1.23076923076923,6.7)--(1.23076923076923,-12.1);
+%     \draw[-,line width=1pt] (2.39230769230769,6.7)--(2.39230769230769,-12.1);
+%     \draw[-,line width=1pt] (3.55384615384615,6.7)--(3.55384615384615,-12.1);
+%     \draw[-,line width=1pt] (4.71538461538461,6.7)--(4.71538461538461,-12.1);
+%     \draw[-,line width=1pt] (5.87692307692307,6.7)--(5.87692307692307,-12.1);
+%     \draw[-,line width=1pt] (7.03846153846153,6.7)--(7.03846153846153,-12.1);          
+%   \end{tikzpicture}
+%   }
+%   }%
+% }
+  %\BgMaterial
+  %\BgThispage
+ %}
+
 \begin{document}
 \begin{titlepage}
   \pagestyle{empty} %封面不显示页码和页眉页脚
@@ -293,28 +371,36 @@
 \pagestyle{plain}
 \setcounter{page}{1}
 \fontsize{18}{30}\selectfont
+%\newpage\NoBgThispage
 \tableofcontents
 
-% \clearpage
-% \newpage
+%\clearpage
 \pagestyle{fancyplain}
 \setcounter{page}{1}
 \begin{withgezhu}
-%\input{text/foreword.tex}
-\input{text/testtext.tex}
+  \input{text/testtext.tex}
 \end{withgezhu}
 
-\newgeometry{twoside,left=8cm,right=2cm,asymmetric=true,marginparwidth={5cm},marginparsep={10mm}}
+\newgeometry{twoside,left=8cm,right=2cm,asymmetric=true,marginparwidth={4.5cm},marginparsep={15mm}}
 
-\newpage
-\clearpage
+%\newpage
+%\clearpage
 \pagestyle{maintext}
 {\renewcommand\baselinestretch{1.1}\selectfont
-\begin{withgezhu}
-\setcounter{page}{1}
 
-%\input{text/bodytext1.tex}
-\input{text/testtext1.tex}
+
+
+
+\begin{withgezhu}
+  \setcounter{page}{1}
+
+  %\input{text/bodytext1.tex}
+  %\newpage
+  \AddEverypageHook{%此后每页都添加网格
+  \BgMaterial
+  }
+  \input{text/testtext1.tex}
+ 
 \end{withgezhu}
 %\restoregeometry
 \end{document}
