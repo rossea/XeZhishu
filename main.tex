@@ -192,7 +192,8 @@ chapter/afterskip = 12pt
 
 \fancypagestyle{fancyplain}{
 \fancyhf{}
-\fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}前言}
+%\fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}前言}
+\fancyhead[EL]{\leavevmode\kern18em\raise0.0pt\hbox{\fontsize{10pt}{9}\selectfont{前言}}\kern.1pt}
 \fancyhead[ER]{\thepage}
 \fancyfoot[OL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\rightmark}
 \fancyfoot[OR]{\thepage}
@@ -205,7 +206,7 @@ chapter/afterskip = 12pt
 \fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\leftmark}
 \fancyhead[ER]{\thepage}
 \fancyfoot[OL]{{~}\rightmark}
-\fancyfoot[OR]{\thepage}
+\fancyfoot[OC]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\thepage}
 }
 
 \fancypagestyle{fancy}{
