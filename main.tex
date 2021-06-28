@@ -1,6 +1,6 @@
 % Tex! = xelatex
-\documentclass{ctexbook}
-
+\documentclass[fontset=windows]{ctexbook}
+%\usepackage{CJKpunct}
 %\usepackage{showframe}
 \usepackage{hyperref}
 \usepackage{titletoc}
@@ -44,13 +44,15 @@
 % \usepackage{varwidth} %% 提供 varwidth 环境
 \ctexset{
 chapter/name = {第,回},
-chapter/format = \LARGE,
+chapter/format = \leavevmode\kern-18pt\LARGE\itshape,
 chapter/fixskip = true,
 chapter/beforeskip = 0pt,
 chapter/afterskip = 12pt
 }
 % \newcommand\chaptertitleformat[1]{%% 以标题内容为参数
 % \begin{varwidth}[t]{.7\linewidth}#1\end{varwidth}}
+%\newcommand\chaptertitle[1]{\leavevmode\kern-36pt\raise0.0pt\hbox{\fontsize{18pt}{30}\selectfont{#1}}\kern0.1pt}
+
 
 \usepackage{color,xcolor}
 %\usepackage{setspace}
@@ -192,7 +194,15 @@ chapter/afterskip = 12pt
 
 \fancypagestyle{fancyplain}{
 \fancyhf{}
-\fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}前言}
+\fancyhead[EL]{\leavevmode\kern18em\raise0.0pt\hbox{\fontsize{10pt}{9}\selectfont{前言}}\kern.1pt}
+\fancyhead[ER]{\thepage}
+\fancyfoot[OL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\rightmark}
+\fancyfoot[OR]{\thepage}
+}
+
+\fancypagestyle{fancyplain2}{
+\fancyhf{}
+\fancyhead[EL]{\leavevmode\kern18em\raise0.0pt\hbox{\fontsize{10pt}{9}\selectfont{后记}}\kern.1pt}
 \fancyhead[ER]{\thepage}
 \fancyfoot[OL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\rightmark}
 \fancyfoot[OR]{\thepage}
@@ -205,7 +215,7 @@ chapter/afterskip = 12pt
 \fancyhead[EL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\leftmark}
 \fancyhead[ER]{\thepage}
 \fancyfoot[OL]{{~}\rightmark}
-\fancyfoot[OR]{\thepage}
+\fancyfoot[OC]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\thepage}
 }
 
 \fancypagestyle{fancy}{
@@ -227,12 +237,12 @@ chapter/afterskip = 12pt
 
 }%
 
-\setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}
-
-\punctstyle{kaiming}
+%\setCJKmainfont[FallBack=SimSun-ExtB]{[HaranoAjiMincho-Regular.otf]} %在ctex中 [AutoFallback = true]属性不可用。
+\setCJKmainfont{SimSun} [BoldFont = SimHei , ItalicFont = KaiTi]
+\xeCJKEditPunctStyle{banjiao}{optimize-kerning=false}
 \newcommand*\CJKmovesymbol[1]{\raise.32em\hbox{#1}}
 \newcommand*\CJKmovepunctsymbol[1]{\raise.6em\hb@xt@\z@{\hss#1}}
-%\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null} 
+\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null} 
 \newcommand*\CJKmove{
   
   \xeCJKnobreakbetweenpuncts
@@ -294,7 +304,7 @@ chapter/afterskip = 12pt
   %angle=90,
   %position={0,0},
   contents={%
-  \begin{tikzpicture}[color={red}, remember picture, overlay]
+  \begin{tikzpicture}[color={red}, remember picture, overlay,opacity=1]
     \draw[-,line width=4pt] (-7.175,6.9)--(8.475,6.9);%画外框
     \draw[-,line width=4pt] (-7.175,-12.3)--(8.475,-12.3);
     \draw[-,line width=4pt] (-7.1,6.83)--(-7.1,-12.23);
@@ -381,12 +391,13 @@ chapter/afterskip = 12pt
   \input{text/testtext.tex}
 \end{withgezhu}
 
+
 \newgeometry{twoside,left=8cm,right=2cm,asymmetric=true,marginparwidth={4.5cm},marginparsep={15mm}}
 
 %\newpage
 %\clearpage
 \pagestyle{maintext}
-{\renewcommand\baselinestretch{1.1}\selectfont
+\renewcommand\baselinestretch{1.1}\selectfont
 
 
 
@@ -400,8 +411,17 @@ chapter/afterskip = 12pt
   \BgMaterial
   }
   \input{text/testtext1.tex}
- 
+
+  
 \end{withgezhu}
-%\restoregeometry
+
+\clearpage\cleardoublepage
+\newpage
+\pagestyle{fancyplain2}
+\newgeometry{twoside,andscape,left=2cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
+\begin{withgezhu}
+\input{text/testtext2.tex}
+\end{withgezhu}
+\restoregeometry
 \end{document}
 
