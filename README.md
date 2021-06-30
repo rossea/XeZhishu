@@ -18,5 +18,5 @@
 # 编译环境
 * XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021)
 * 使用fontawesome字体显示特殊符号
-* 主要字体使用SimSun。后备字体为SimSun-ExtB
+* 主要字体使用SourceHanSansSC。后备字体为SourceHanSansTC
 * 需要编译两边：xelatex main && xelatex main
