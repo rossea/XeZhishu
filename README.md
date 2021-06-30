@@ -12,7 +12,8 @@
 1. 头注不能跨页排版，需要手工调整。
 2. 尾注的分割线无法删除。
 3. 包含全角、半角符号的割注换行后，字间距无法控制。
-4. \setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}在ctex中 [AutoFallback = true]属性不可用。
+4. ~~\setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}在ctex中 [AutoFallback = true]属性不可用。~~
+\xeCJKsetup{AutoFallBack=true} %启用AutoFallBack（本选项默认是false）
 
 # 编译环境
 * XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021)
