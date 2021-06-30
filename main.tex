@@ -1,7 +1,5 @@
 % Tex! = xelatex
 \documentclass[fontset=windows]{ctexbook}
-%\usepackage{CJKpunct}
-%\usepackage{showframe}
 \usepackage{hyperref}
 \usepackage{titletoc}
 \usepackage{zhnumber}
@@ -10,7 +8,158 @@
 \usepackage{ruby}
 %\usepackage{emptypage} %不显示空白页页码
 \usepackage{geometry}
-\geometry{xetex,twoside,landscape,left=2cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
+\geometry{xetex,twoside,landscape,left=3cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
+\usepackage{xparse}
+\AtBeginDocument{\CJKmove \sloppy}
+\defaultCJKfontfeatures{RawFeature={vertical:+vert:+vhal}}
+\AtBeginShipout{%
+  \global\setbox\AtBeginShipoutBox\vbox{%
+    \special{pdf: put @thispage <</Rotate 90>>}%
+    \box\AtBeginShipoutBox
+  }%
+}
+\setCJKmainfont[FallBack={Source Han Serif}]{FOT-TsukuAOldMin Pr6N}%在ctex中 [AutoFallback = true]属性不可用。
+\punctstyle{plain}
+%\xeCJKEditPunctStyle{plain}{optimize-kerning=false}
+\newcommand*\CJKmovesymbol[1]{\raise.32em\hbox{#1}}
+\newcommand*\CJKmovepunctsymbol[1]{\raise.6em\hb@xt@\z@{\hss#1}}
+%\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null} 
+\newcommand*\CJKmove{
+  
+  \xeCJKnobreakbetweenpuncts
+  \let\CJKsymbol\CJKmovesymbol
+  \let\CJKpunctsymbol\CJKsymbol
+  } %修正baseline
+
+
+\ExplSyntaxOn
+
+\NewDocumentCommand{\readCIDfile}{m}
+ {
+  \readcid_file:n { #1 }
+ }
+
+\NewDocumentCommand{\CID}{m}
+ {
+  \use:c { CID#1 }
+ }
+\NewDocumentCommand{\UTF}{m}
+ {
+  \symbol { \int_from_hex:n { #1 } }
+ }
+
+\ior_new:N \g_readcid_file_stream
+
+\cs_new_protected:Nn \readcid_file:n
+ {
+  \ior_open:Nn \g_readcid_file_stream { #1 }
+  \ior_str_map_inline:Nn \g_readcid_file_stream
+   {
+    \__readcid_line:n { ##1 }
+   }
+ }
+
+
+\cs_new_protected:Nn \__readcid_line:n
+ {
+  \__readcid_line_aux:w #1 \q_stop
+ }
+
+\cs_new_protected:Npn \__readcid_line_aux:w #1 ~ #2 \q_stop
+ {
+  \str_if_eq:nnF { #1 } { #2 }
+   {
+    \str_case_e:nnF { \str_range:nnn { #2 } { 1 } { 3 } }
+     {
+      {/un}{ \__readcid_def_uni:nn { #1 } { #2 } }
+      {/Ja}{ \__readcid_def_japan:nn { #1 } { #2 } }
+      {./n}{ }
+     }
+     { \__readcid_def:nn { #1 } { #2 } }
+   }
+ }
+
+\cs_new_protected:Nn \__readcid_def:nn
+ {
+  \str_if_in:nnTF { #1 } { . }
+   {
+    \__readcid_def:w #1 - { #2 }
+   }
+   {
+    \__readcid_def_do:nn { #1 } { #2 }
+   }
+ }
+\cs_new_protected:Npn \__readcid_def:w #1..#2 - #3
+ {
+  \int_step_inline:nnn { #1 } { #2 }
+   {
+    \__readcid_def_do:nn { ##1 } { #3 }
+   }
+ }
+\cs_new_protected:Nn \__readcid_def_do:nn
+ {
+  \cs_new:cpx {CID#1} { \UTF { #2 } }
+ }
+
+\cs_new_protected:Nn \__readcid_def_uni:nn
+ {
+  \str_if_in:nnTF { #1 } { . }
+   {
+    \__readcid_def_uni_multi:w #1 - { #2 }
+   }
+   {
+    \__readcid_def_uni_do:nn { #1 } { #2 }
+   }
+ }
+\cs_new_protected:Npn \__readcid_def_uni_multi:w #1..#2 - #3
+ {
+  \int_step_inline:nnn { #1 } { #2 }
+   {
+    \__readcid_def_uni_do:nn { ##1 } { #3 }
+   }
+ }
+\cs_new_protected:Nn \__readcid_def_uni_do:nn
+ {
+  \cs_new:cpx {CID#1} { \UTF { \str_range:nnn { #2 } { 5 } { 8 } } }
+ }
+
+\cs_new_protected:Nn \__readcid_def_japan:nn
+ {
+  \str_if_in:nnTF { #1 } { . }
+   {
+    \__readcid_def_japan_multi:w #1 - { #2 }
+   }
+   {
+    \__readcid_def_japan_do:nn { #1 } { #2 }
+   }
+ }
+\cs_new_protected:Npn \__readcid_def_japan_multi:w #1..#2 - #3
+ {
+  \int_step_inline:nnn { #1 } { #2 }
+   {
+    \__readcid_def_japan_do:nn { ##1 } { #3 }
+   }
+ }
+\cs_new_protected:Nn \__readcid_def_japan_do:nn
+ {
+  \cs_new:cpx {CID#1} { \CID { \__readcid_japan_strip:w #2 \q_stop } }
+ }
+\cs_new:Npn \__readcid_japan_strip:w #1.#2.#3 \q_stop { #2 }
+
+\ExplSyntaxOff
+
+
+\readCIDfile{/usr/local/texlive/2021/texmf-dist/fonts/cid/fontforge/Adobe-Japan1-6.cidmap}
+%\usepackage{fontspec}
+
+% \usepackage{fontspec}
+% \usepackage{tabulary}
+% \def\UTF#1{\char"#1}
+% \def\CID#1{\XeTeXglyph#1}
+%\usepackage{zxotf}
+%\usepackage{CJKpunct}
+%\usepackage{showframe}
+
 %% 边注的宽度由长度\marginparwidth控制，与正文之间的水平距离由\marginparsep决定。
 %% asymmetric参数控制左边距和右边距不会因翻页而互换。asymmetric=true表示不互换，以保证twoside模式下，头注边距的一致性。且为了页面上下对称，应满足 top = left - marginparwidth = right
 \usepackage{indentfirst}
@@ -40,6 +189,7 @@
 \or \ding{198}\or \ding{199}\or \ding{200}\or \ding{201}\else *\fi\relax}%数字单纯带圈，正常数字
 \makeatother
 
+\xeCJKsetup{AutoFallBack=true} %启用AutoFallBack（本选项默认是false）
 \usepackage{subfig,graphicx}
 % \usepackage{varwidth} %% 提供 varwidth 环境
 \ctexset{
@@ -228,28 +378,10 @@ chapter/afterskip = 12pt
 
 \fancypagestyle{plain}{}
 
-\defaultCJKfontfeatures{RawFeature={vertical:+vert:+vhal}}
-\AtBeginShipout{%
-  \global\setbox\AtBeginShipoutBox\vbox{%
-    \special{pdf: put @thispage <</Rotate 90>>}%
-    \box\AtBeginShipoutBox
-  }%
+%
 
-}%
 
-%\setCJKmainfont[FallBack=SimSun-ExtB]{[HaranoAjiMincho-Regular.otf]} %在ctex中 [AutoFallback = true]属性不可用。
-\setCJKmainfont{SimSun} [BoldFont = SimHei , ItalicFont = KaiTi]
-\xeCJKEditPunctStyle{banjiao}{optimize-kerning=false}
-\newcommand*\CJKmovesymbol[1]{\raise.32em\hbox{#1}}
-\newcommand*\CJKmovepunctsymbol[1]{\raise.6em\hb@xt@\z@{\hss#1}}
-\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null} 
-\newcommand*\CJKmove{
-  
-  \xeCJKnobreakbetweenpuncts
-  \let\CJKsymbol\CJKmovesymbol
-  \let\CJKpunctsymbol\CJKsymbol
-  } %修正baseline
-\AtBeginDocument{\CJKmove \sloppy}
+%\setCJKmainfont{A-OTF-SeiKaiCB1Pr5-Regular.otf} %[BoldFont = SimHei , ItalicFont = KaiTi]
 
 
 
@@ -418,10 +550,9 @@ chapter/afterskip = 12pt
 \clearpage\cleardoublepage
 \newpage
 \pagestyle{fancyplain2}
-\newgeometry{twoside,landscape,left=2cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
+\newgeometry{twoside,landscape,left=3cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
 \begin{withgezhu}
 \input{text/testtext2.tex}
 \end{withgezhu}
-\restoregeometry
+%\restoregeometry
 \end{document}
-
