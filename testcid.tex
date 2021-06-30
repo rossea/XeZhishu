@@ -1,0 +1,108 @@
+\documentclass{article}
+\usepackage{iftex}
+\ifXeTeX
+\usepackage{fontspec}
+\setmainfont{[A-OTF-SeiKaiCB1Pr5-Regular.otf]}
+\def\UTF#1{\char"#1}
+\def\CID#1{\XeTeXglyph#1}
+\fi
+\ifLuaTeX
+\usepackage{luatexja-fontspec}
+\usepackage{luatexja-otf}
+\setmainjfont{[A-OTF-SeiKaiCB1Pr5-Regular.otf]}
+\fi
+
+%\setCJKmainfont{[A-OTF-SeiKaiCB1Pr5-Regular.otf]} 
+
+\begin{document}
+\begin{table}[htbp]
+    \centering
+    \caption{似た字の異字}
+      \begin{tabular}{|l|l|r|l|}
+      \hline
+      似た字   & 異字    &       &  \\
+      \hline
+      高     & 髙     & \multicolumn{1}{l|}{\UTF{9AD9}} & \CID{8705} \\
+      \hline
+      崎     & 﨑     & \multicolumn{1}{l|}{\UTF{FA11}} & \CID{8443} \\
+      \hline
+      濱     & 濵     & \multicolumn{1}{l|}{\UTF{6FF5}} & \CID{8531} \\
+      \hline
+      桑     & 桒     & \multicolumn{1}{l|}{\UTF{6852}} & \CID{14291} \\
+      \hline
+      緑     & 綠     & \multicolumn{1}{l|}{\UTF{7DA0}} & \CID{8594} \\
+      \hline
+      徳     & 德     & \multicolumn{1}{l|}{\UTF{5FB7}} & \CID{8452} \\
+      \hline
+      琇     &       & \multicolumn{1}{l|}{\UTF{7407}} & \CID{8555} \\
+      \hline
+      蓮     & 蓮     & \multicolumn{1}{l|}{\UTF{F999}} & \CID{7811} \\
+      \hline
+      蔭     & 䡬     & \multicolumn{1}{l|}{\UTF{4543}} & \CID{18540} \\
+      \hline
+      角     & 角     & \multicolumn{1}{l|}{\UTF{2EC6}} & \CID{13682} \\
+      \hline
+      土     & 圡     & \multicolumn{1}{l|}{\UTF{5721}} & \CID{13952} \\
+      \hline
+      土     & 土     &       & \CID{13953} \\
+      \hline
+      龍     & 龍     &       & \CID{14087} \\
+      \hline
+      龍     & 龍     &       & \CID{14086} \\
+      \hline
+      薩     & 薩     &       & \CID{7688} \\
+      \hline
+      廣     & 廣     &       & \CID{14127} \\
+      \hline
+      1廣    & 亓     &       & \CID{20115} \\
+      \hline
+      巽     & 巽     &       & \CID{7734} \\
+      \hline
+      吉     & 吉     &       & \CID{13706} \\
+      \hline
+      櫛     & 櫛     &       & \CID{7665} \\
+      \hline
+      榊     & 榊     &       & \CID{7686} \\
+      \hline
+      樋     & 樋     &       & \CID{7780} \\
+      \hline
+      泰     &       &       & \CID{13904} \\
+      \hline
+      溝     & 溝     &       & \CID{7681} \\
+      \hline
+      真     & 真     &       & \CID{13854} \\
+      \hline
+      禧     & 仗     &       & \CID{20183} \\
+      \hline
+      礼     & 禮     &       & \CID{14171} \\
+      \hline
+      翠     & 翠     &       & \CID{7712} \\
+      \hline
+      葛     & 葛     &       & \CID{7652} \\
+      \hline
+      辻     & 辻     &       & \CID{8267} \\
+      \hline
+      逢     & 逢     &       & \CID{8266} \\
+      \hline
+      邉     & 邉     &       & \CID{14244} \\
+      \hline
+      邉     & 邉     &       & \CID{14248} \\
+      \hline
+      那     & 那     &       & \CID{7765} \\
+      \hline
+      隆     & 隆     &       & \CID{13393} \\
+      \hline
+      靜静    & 靜     &       & \CID{13874} \\
+      \hline
+      莱     & 萊     &       & \CID{7807} \\
+      \hline
+      蓬     & 蓬     &       & \CID{7794} \\
+      \hline
+      靭     & 靱     &       & \CID{13624} \\
+      \hline
+      芦     & 芦     &       & \CID{7961} \\
+      \hline
+      \end{tabular}%
+    \label{tab:addlabel}%
+  \end{table}%
+\end{document}

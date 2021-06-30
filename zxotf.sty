@@ -1,0 +1,242 @@
+%%
+%% This is file 'zxotf.sty'.
+%%
+%% Copyright (c) 2009-2018 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
+
+%%%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{zxotf}[2018/08/04 v0.2b ZX CID glyph input]
+\RequirePackage{ifxetex}
+\RequireXeTeX
+
+%%%% preparations
+\def\zxot@pkgname{zxotf}
+\def\zxot@error{\PackageError\zxot@pkgname}
+\def\zxot@warn{\PackageWarningNoLine\zxot@pkgname}
+\RequirePackage{zxbase}
+\def\zxot@debug#1{\bxDebug{\zxot@pkgname: #1}}
+\zxBDHookGenFamFlag
+\zxBDHookForgepTeXDir
+\newif\ifzxot@ok
+\newcount\zxot@cc
+% to avoid a bug in bxbase
+\let\bxMap@\bxMap
+
+%%%% option handling
+\newif\ifzxot@ajmacros
+\DeclareOption{macros}{\zxot@ajmacrostrue}
+\DeclareOption{nomacros}{\zxot@ajmacrosfalse}
+\let\zxot@scale\relax
+\DeclareOption{noscale}{\def\zxot@scale{1}}
+\ProcessOptions*
+
+%%%% check for zxjatype
+\newif\ifzxot@zxjatype
+\@ifpackageloaded{zxjatype}{\zxot@zxjatypetrue}{}
+\AtBeginDocument{%
+  \ifzxot@zxjatype\else\@ifpackageloaded{zxjatype}{%
+      \zxot@error{zxjatype must be loaded before me}\@ehc
+  }\fi}
+
+%%%% something expl3
+%% \zxot@set@basfam
+\@ifpackagelater{fontspec}{2017/11/05}{%v2.6f
+  \@tempcnta=\z@
+}{\@ifpackagelater{fontspec}{2010/05/27}{% v2.0b1
+  \@tempcnta=\@ne
+}{\@tempcnta=\tw@}}
+\ifcase\@tempcnta % fontspec v2.6f+
+\ExplSyntaxOn
+  \cs_new:Npn \zxot@set@basfam
+    { \cs_if_exist:cTF { g__fontspec_fontinfo_ \CJK@family _prop }
+        { \prop_get:cnNF { g__fontspec_fontinfo_ \CJK@family _prop } { fontname }
+            \zxot@basfam
+            { \cs_set_eq:NN \zxot@basfam \relax }
+        }
+        { \cs_set_eq:NN \zxot@basfam \relax }
+    }
+\ExplSyntaxOff
+\or         % fontspec v2+
+\ExplSyntaxOn
+  \cs_new:Npn \zxot@set@basfam
+    { \cs_if_exist:cTF { g__fontspec_ \CJK@family _prop }
+        { \prop_get:cnNF { g__fontspec_ \CJK@family _prop } { fontname }
+            \zxot@basfam
+            { \cs_set_eq:NN \zxot@basfam \relax }
+        }
+        { \cs_set_eq:NN \zxot@basfam \relax }
+    }
+\ExplSyntaxOff
+\else       % fontspec v1
+  \def\zxot@set@basfam{%
+    \expandafter\let\expandafter\zxot@basfam
+     \csname zf@family@fontname\f@family\endcsname
+  }
+\fi
+%% 
+\@ifpackagelater{xeCJK}{2012/05/01}
+  {\@tempswatrue}{\@tempswafalse}
+\if@tempswa % xeCJK v3+
+\ExplSyntaxOn
+  \cs_new:Npn \zxot@setCJKfont
+    { \__zxjt_use_CJKfam: }
+  \cs_if_exist:NT \xeCJK_select_font:
+    {  \cs_set:Npn \zxot@setCJKfont
+         { \xeCJK_select_font: }
+    }
+\ExplSyntaxOff
+\else       % xeCJK v2
+  \def\zxot@setCJKfont{\zxjt@setCJKfont}
+\fi
+
+%%%% decide scale factor
+\ifx\zxot@scale\relax
+  % If zxjatype is used, try \JaFontScale, \zxjt@scale,
+  % and \__zxjt_scale_tl.
+  \ifzxot@zxjatype
+    \ifdefined\JaFontScale \let\zxot@scale\JaFontScale
+    \else\ifdefined\zxjt@scale \let\zxot@scale\zxjt@scale
+    \else\ifcsname __zxjt_scale_tl\endcsname
+      \expandafter\let\expandafter\zxot@scale
+       \csname __zxjt_scale_tl\endcsname
+    \fi\fi\fi
+    \ifx\zxot@scale\@empty \def\zxot@scale{1}\fi
+  \fi
+  \ifx\zxot@scale\relax % still unknown
+    % Try \Cjascale and \jsScale.
+    \ifdefined\Cjascale \let\zxot@scale\Cjascale
+    \else\ifdefined\jsScale \let\zxot@scale\jsScale
+    \fi\fi
+  \fi
+  \ifx\zxot@scale\relax % still unknown
+    \def\zxot@scale{1}%
+  \fi
+\fi
+\zxot@debug{scale=\zxot@scale}
+
+%%%%<*> \setcidminchofont/\setcidgothicfont
+\def\setcidminchofont{\zxot@setcidfont\zxot@cidfam@mc}
+\def\setcidgothicfont{\zxot@setcidfont\zxot@cidfam@gt}
+\def\zxot@setcidfont#1{%
+  \let#1\relax
+  \@ifnextchar[%
+  {\zxot@setcidfont@a#1}{\zxot@setcidfont@a#1[]}}
+\def\zxot@setcidfont@a#1[#2]{%
+  \newfontfamily#1[Scale=\zxot@scale,#2]}
+\let\zxot@cidfam@mc\relax
+\let\zxot@cidfam@gt\relax
+
+%%%% \zxot@checkcid
+\def\zxot@checkcid{%
+  \zxot@set@basfam
+\zxot@debug{basfam=\zxot@basfam}%
+  \ifx\zxot@basfam\relax \let\zxot@iscid=f%
+  \else
+    \expandafter\let\expandafter\zxot@iscid
+     \csname zxot@AC/\zxot@basfam\endcsname
+    \ifx\zxot@iscid\relax \zxot@checkcid@a \fi
+  \fi}
+\def\zxot@checkcid@a{%
+  \let\zxot@iscid=t%
+  \zxot@checkcid@b{9734}{721}%
+  \zxot@checkcid@b{23383}{2248}%
+  \zxot@checkcid@b{65313}{790}%
+  \zxot@debug{Font '\zxot@basfam' is \if f\zxot@iscid NOT \fi CID-keyed.}%
+  \global\expandafter\let\csname zxot@AC/\zxot@basfam\endcsname
+   =\zxot@iscid}
+\def\zxot@checkcid@b#1#2{%
+  \ifnum\XeTeXcharglyph#1=#2\else \let\zxot@iscid=f\fi}
+
+%%%% \zxot@CID
+\DeclareRobustCommand*\zxot@CID[1]{%
+  \begingroup\XeTeXinterchartokenstate\z@
+  % \zxGFFlag is set by \selectfont
+  \let\zxot@gfflag\zxGFFlag
+  % When zxjatype is used, switch to CJK family.
+  \ifzxot@zxjatype \zxot@setCJKfont \fi
+  \ifcase\zxot@gfflag \or \zxot@cidfam@mc
+  \else \zxot@cidfam@gt \fi
+  \zxot@checkcid
+  \zxot@cc=#1\relax \zxot@cid@a
+  \endgroup}
+\def\zxot@cid@a{%
+  \if t\zxot@iscid \XeTeXglyph\zxot@cc \else \zxot@emu@out \fi}
+
+%%%% \zxot@emu@out
+\def\bxMap@#1{%
+\begingroup \count@ \bxUcv \divide \count@ \bx@m@cc \chardef \bx@m@hb
+\count@ \multiply \count@ \bx@m@cc \advance \bxUcv -\count@ \setbox \z@
+\hbox {#1\bx@m@hb \char \bxUcv }%
+\global \bxUcv \wd \z@ \endgroup}
+\def\zxot@emu@out{\tracingonline=2 %
+  \ifcsname zxot@CD/\the\zxot@cc\endcsname
+    \csname zxot@CD/\the\zxot@cc\endcsname
+  \else \bxUcv\zxot@cc \bxMap@\zxot@ctou
+        \ifnum\bxUcv=\z@ \zxot@error@char \else \char\bxUcv \fi
+  \fi}
+\font\zxot@ctou=zxotc2u
+\chardef\zxot@error@char="3013 % GETA MARK
+
+%%%% \zxot@CIDdef
+\def\zxot@CIDdef#1{\@namedef{zxot@CD/#1}}
+\zxot@CIDdef{8705}{^^^^9ad9}    %\ajHashigoTaka
+\zxot@CIDdef{13706}{^^^^^20bb7} %\ajTsuchiYoshi
+\zxot@CIDdef{14290}{^^^^fa11}   %\ajTatsuSaki
+\zxot@CIDdef{16209}{^^^^304b^^^^309a} % hiragana-ka + semivowel
+\zxot@CIDdef{16210}{^^^^304d^^^^309a} % hiragana-ki + semivowel
+\zxot@CIDdef{16211}{^^^^304f^^^^309a} % hiragana-ku + semivowel
+\zxot@CIDdef{16212}{^^^^3051^^^^309a} % hiragana-ke + semivowel
+\zxot@CIDdef{16213}{^^^^3053^^^^309a} % hiragana-ko + semivowel
+\zxot@CIDdef{16214}{^^^^30ab^^^^309a} % katakana-ka + semivowel
+\zxot@CIDdef{16215}{^^^^30ad^^^^309a} % katakana-ki + semivowel
+\zxot@CIDdef{16216}{^^^^30af^^^^309a} % katakana-ku + semivowel
+\zxot@CIDdef{16217}{^^^^30b1^^^^309a} % katakana-ke + semivowel
+\zxot@CIDdef{16218}{^^^^30b3^^^^309a} % katakana-ko + semivowel
+\zxot@CIDdef{16219}{^^^^30bb^^^^309a} % katakana-se + semivowel
+\zxot@CIDdef{16220}{^^^^30c4^^^^309a} % katakana-tu + semivowel
+\zxot@CIDdef{16221}{^^^^30c8^^^^309a} % katakana-to + semivowel
+
+%%%% \zxot@UTF
+\DeclareRobustCommand*\zxot@UTF[1]{%
+  \uppercase{\char"#1 }}
+
+%%%% \zxot@load@ajmacros
+\@onlypreamble\zxot@load@ajmacros
+\def\zxot@load@ajmacros{%
+  \let\if@kana\iffalse \@gobble\fi
+  \zxot@tempmuteif{ifydir}\zxot@tempmuteif{iftdir}%
+  \zxot@tempmute{yoko}\zxot@tempmute{tate}%
+  \zxot@tempmute{inhibitglue}%
+  \AtBeginDocument{%
+    \ifx\inhibitglue\@undefined \let\inhibitglue\relax \fi}%
+  \@namedef{ver@otf.sty}{2100/01/01}%
+  \zxRequirepLaTeXPackage{ajmacros}%
+  \zxot@tempmute@revert
+  %% postprocess
+}
+\def\zxot@tempmuteif{\zxot@tempmute@a\iffalse}\@gobble\fi
+\def\zxot@tempmute{\zxot@tempmute@a\relax}
+\let\zxot@tempmute@revert\@empty
+\def\zxot@tempmute@a#1#2{% \CSX{CSY}
+  \expandafter\zxot@tempmute@b\csname#2\expandafter\endcsname
+  \csname zxot@org@#2\endcsname#1}
+\def\zxot@tempmute@b#1#2#3{% \CSY\zxot@org@CSY\CSX
+  \g@addto@macro\zxot@tempmute@revert{\let#1#2}%
+  \let#2#1\let#1#3}
+
+%%------ initial settings
+
+%%%% load ajmacros if necessary
+\ifzxot@ajmacros \zxot@load@ajmacros \fi
+
+%%%%<*> \CID{<code>}, \UTF{<code>}
+\let\CID\zxot@CID
+\AtBeginDocument{%
+  \ifx\UTF\@undefined \let\UTF\zxot@UTF \fi}
+
+%% EOF
