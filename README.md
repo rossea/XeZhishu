@@ -19,15 +19,23 @@
 6. ~~编译时报错，异常终止：
 ! TeX capacity exceeded, sorry [main memory size=5000000].
 \iterate ...hu@parfillskip \unhcopy \gezhu@tmpbox ~~
-通过sudo vi /usr/local/texlive/2021/texmf.cnf
+通过修改/usr/local/texlive/2021/texmf.cnf
+
 在自定义字体目录
+
 OSFONTDIR = /usr/share/fonts//;/usr/local/share/fonts//;~/.fonts//
+
 添加以下参数，将默认数值加大
-main_memory=500000000
-extra_mem_bot=500000000
-font_mem_size=500000000
-pool_size=500000000
-buf_size=500000000
+
+  main_memory=500000000
+  
+  extra_mem_bot=500000000
+  
+  font_mem_size=500000000
+  
+  pool_size=500000000
+  
+  buf_size=500000000
 
 
 # 编译环境
