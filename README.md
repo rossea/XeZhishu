@@ -8,7 +8,7 @@
 测试实现中文直书的头注、割注、底注、尾注、行间注，特别是Dian YIN (yindian@ustc) 的gezhu宏包2007.09.29（下载自 https://www.newsmth.net/nForum/#!article/TeX/260509 ），可以自动跨页断行，对于割注较多的文本节省了大量调整时间。
 
 
-# 目前存在的主要问题：
+## 目前存在的主要问题：
 1. 头注不能跨页排版，需要手工调整。
 2. 尾注的分割线无法删除。
 3. ~~包含全角、半角符号的割注换行后，字间距无法控制。~~ 
@@ -16,7 +16,7 @@
 4. 割注换页后，因字号不同，页边距与其他页面不同，导致版心偏移。
 5. ~~\setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}在ctex中 [AutoFallback = true]属性不可用。~~
   \xeCJKsetup{AutoFallBack=true} %启用AutoFallBack（本选项在xeCJK中默认是false）
-6. ~~编译时报错，异常终止 TeX capacity exceeded, sorry [main memory size=5000000] ~~
+6. ~~编译时报错，异常终止 TeX capacity exceeded, sorry [main memory size=5000000]
 
 通过修改/usr/local/texlive/2021/texmf.cnf
 
@@ -37,7 +37,7 @@ OSFONTDIR = /usr/share/fonts//;/usr/local/share/fonts//;~/.fonts//
   buf_size=500000000
 
 
-# 编译环境
+## 编译环境
 * XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021)
 * 使用fontawesome字体显示特殊符号
 * 主要字体使用SourceHanSansSC。后备字体为SourceHanSansTC
