@@ -16,7 +16,7 @@
 4. 割注换页后，因字号不同，页边距与其他页面不同，导致版心偏移。
 5. ~~\setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}在ctex中 [AutoFallback = true]属性不可用。~~
   \xeCJKsetup{AutoFallBack=true} %启用AutoFallBack（本选项在xeCJK中默认是false）
-6. ~~编译时报错，异常终止：TeX capacity exceeded, sorry [main memory size=5000000].\iterate ...hu@parfillskip \unhcopy \gezhu@tmpbox ~~
+6. ~~编译时报错，异常终止 TeX capacity exceeded, sorry [main memory size=5000000] ~~
 
 通过修改/usr/local/texlive/2021/texmf.cnf
 
