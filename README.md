@@ -19,6 +19,7 @@
 6. ~~编译时报错，异常终止：
 ! TeX capacity exceeded, sorry [main memory size=5000000].
 \iterate ...hu@parfillskip \unhcopy \gezhu@tmpbox ~~
+
 通过修改/usr/local/texlive/2021/texmf.cnf
 
 在自定义字体目录
