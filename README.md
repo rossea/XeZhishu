@@ -13,7 +13,7 @@
 2. 尾注的分割线无法删除。
 3. ~~包含全角、半角符号的割注换行后，字间距无法控制。~~ 
   目前不进行标点压缩，则不会出现割注字距的问题。
-4. 割注换页后，因字号不同，页边距与其他页面不同，导致版心偏移。
+4. 割注换页后，因字号不同，页边距与其他页面不同，导致版心偏移。主要原因是修改\newcommand*\CJKmovesymbol[1]{\raise.32em\hbox{#1}} 会使文中数字和英文与所在行文字不对其。同时还会影响跨页割注和页边距的位置。
 5. ~~\setCJKmainfont[FallBack=SimSun-ExtB]{SimSun}在ctex中 [AutoFallback = true]属性不可用。~~
   \xeCJKsetup{AutoFallBack=true} %启用AutoFallBack（本选项在xeCJK中默认是false）
 6. ~~编译时报错，异常终止 TeX capacity exceeded, sorry [main memory size=5000000]~~ 
