@@ -6,12 +6,13 @@
 \usepackage{fontawesome}
 \usepackage{tikz}
 \usepackage{ruby}
+%\usepackage{coffeestains}
 \renewcommand{\rubysep}{-1.3ex} %调整行间注与正文的距离
 %\usepackage{emptypage} %不显示空白页页码
 \usepackage{geometry}
 \geometry{xetex,twoside,landscape,left=3cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
 \usepackage{xparse}
-\AtBeginDocument{\CJKmove \sloppy}
+
 \defaultCJKfontfeatures{RawFeature={vertical:+vert:+vhal}}
 \AtBeginShipout{%
   \global\setbox\AtBeginShipoutBox\vbox{%
@@ -24,14 +25,18 @@
 %\xeCJKEditPunctStyle{plain}{optimize-kerning=false}
 \newcommand*\CJKmovesymbol[1]{\raise.32em\hbox{#1}}
 \newcommand*\CJKmovepunctsymbol[1]{\raise.6em\hb@xt@\z@{\hss#1}}
-%\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null} 
+\newcommand*\CJKnopunctsymbol[1]{\setbox0=\hb@xt@\z@{\hss#1}\null}  %也不知道為什麼總之這樣可以把標點都消滅
+ 
 \newcommand*\CJKmove{
   
   \xeCJKnobreakbetweenpuncts
   \let\CJKsymbol\CJKmovesymbol
   \let\CJKpunctsymbol\CJKsymbol
+  %\let\CJKpunctsymbol\CJKmovepunctsymbol
   } %修正baseline
 
+
+\AtBeginDocument{\CJKmove \sloppy}
 
 \ExplSyntaxOn
 
@@ -151,6 +156,12 @@
 
 
 \readCIDfile{/usr/local/texlive/2021/texmf-dist/fonts/cid/fontforge/Adobe-Japan1-6.cidmap} %texlive发行版本中的cidmap地址
+
+
+
+
+
+
 %\usepackage{fontspec}
 
 % \usepackage{fontspec}
@@ -167,7 +178,7 @@
 \usepackage{fancyhdr}
 \usepackage{gezhu}
 \expandafter\everywithgezhu\expandafter{\the\everywithgezhu}
-  \everygezhu{\fontsize{11}{1}\selectfont \color{blue}} \setgezhuraise{-3.5pt}
+  \everygezhu{\fontsize{11}{11}\selectfont \color{blue}}\setgezhuraise{-3pt}
   %\gezhuraggedture　%%「」换为 ﹁﹂
 \usepackage{marginnote}
 \usepackage{endnotes}
@@ -190,11 +201,57 @@
 \or \ding{198}\or \ding{199}\or \ding{200}\or \ding{201}\else *\fi\relax}%数字单纯带圈，正常数字
 \makeatother
 
+% \makeatletter
+% \let\shipout@temp=\shipout
+% \def\shipout{\shipout@hook\shipout@temp}
+% \def\shipout@hook{%
+%   \setbox\@outputbox=\vbox to\pagegoal{\pageboxfronthook\unvbox\@outputbox\pageboxbackhook}}
+
+% \newbox\linebox
+% \def\eatlines{%
+%   \setbox\linebox\lastbox
+%   \ifvoid\linebox\else
+%     \unskip\unpenalty
+%     {\eatlines}%
+%     \hbox{\lineboxfronthook\box\linebox\lineboxendhook}%
+%   \fi}
+
+% \newbox\@parbox
+% \newbox\parsplit
+% \newdimen\pageblank
+% \AtBeginDocument{%
+%   \everypar{%
+%     \setbox\@parbox=\vbox\bgroup%或者\vtop
+%     \everypar{}%
+%     \def\par{\parboxinnerhook\@par\eatlines\egroup\parboxfronthook
+%       \pageblank=\pagegoal
+%       \advance\pageblank by-\pagetotal
+%       \advance\pageblank by-1pt
+%       \ifdim\ht\@parbox>\pageblank
+%         \setbox\parsplit=\vsplit\@parbox to\pageblank
+%         \vbox{\unvbox\parsplit}%
+%         \pagebreakbackhook
+%         \break
+%         \pagebreakfronthook
+%       \fi
+%       \box\@parbox\parboxbackhook\@par}}}
+% \def\parboxfronthook{\kern-\parindent\llap{\texttt{PAR FRONT}}}
+% \def\parboxinnerhook{\texttt{PAR INNER}}
+% \def\parboxbackhook{\rlap{\texttt{PAR BACK}}}
+% \def\pagebreakfronthook{\llap{\texttt{PAGE BREAK FRONT}}}
+% \def\pagebreakbackhook{\rlap{\texttt{PAGE BREAK BACK}}}
+% \def\lineboxfronthook{\texttt{>>}}
+% \def\lineboxendhook{\texttt{<<}}
+% \def\pageboxfronthook{\ifdim\pagetotal<1\pagegoal{A}\fi}
+% %\def\pageboxbackhook{B\ifdim\pagetotal<.5\pagegoal\vfill\hbox to\hsize{\hfill NULL\hfill}\vfill\fi}
+% \def\pageboxbackhook{\quad}
+% \makeatother
+
 \xeCJKsetup{AutoFallBack=true} %启用AutoFallBack（本选项默认是false）
 \usepackage{subfig,graphicx}
 % \usepackage{varwidth} %% 提供 varwidth 环境
 \ctexset{
-chapter/name = {第,回},
+chapter/name = {,},
 chapter/format = \leavevmode\kern-18pt\LARGE\itshape,
 chapter/fixskip = true,
 chapter/beforeskip = 0pt,
@@ -345,7 +402,7 @@ chapter/afterskip = 12pt
 
 \fancypagestyle{fancyplain}{
 \fancyhf{}
-\fancyhead[EL]{\leavevmode\kern18em\raise0.0pt\hbox{\fontsize{10pt}{9}\selectfont{前言}}\kern.1pt}
+\fancyhead[EL]{\leavevmode\kern18em\raise0.0pt\hbox{\fontsize{10pt}{9}\selectfont{~}}\kern.1pt}
 \fancyhead[ER]{\thepage}
 \fancyfoot[OL]{{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}\rightmark}
 \fancyfoot[OR]{\thepage}
@@ -410,11 +467,11 @@ chapter/afterskip = 12pt
 
 \setlength{\parindent}{0pt} 
 \setlength{\headheight}{15.7301pt}
-\linespread{.9} %ctex定义的行距倍数
+\linespread{1.1} %ctex定义的行距倍数
 \setlength{\parskip}{0pt}
 
-\title{脂硯齋重評石頭記}
-\author{清\quad 曹雪芹}
+\title{长短经校注}
+\author{唐\quad 赵蕤}
 \date{}
 %\authorfn{庚辰本}
 
@@ -438,28 +495,28 @@ chapter/afterskip = 12pt
   %position={0,0},
   contents={%
   \begin{tikzpicture}[color={red}, remember picture, overlay,opacity=1]
-    \draw[-,line width=4pt] (-7.175,6.9)--(8.475,6.9);%画外框
-    \draw[-,line width=4pt] (-7.175,-12.3)--(8.475,-12.3);
-    \draw[-,line width=4pt] (-7.1,6.83)--(-7.1,-12.23);
-    \draw[-,line width=4pt] (8.4,6.83)--(8.4,-12.23);
+    \draw[-,line width=4pt] (-6.975,6.9)--(8.875,6.9);%画外框
+    \draw[-,line width=4pt] (-6.975,-12.3)--(8.875,-12.3);
+    \draw[-,line width=4pt] (-6.9,6.83)--(-6.9,-12.23);
+    \draw[-,line width=4pt] (8.8,6.83)--(8.8,-12.23);
     %
-    \draw[-,line width=1pt] (-6.9,6.7)--(8.2,6.7);%画内框
-    \draw[-,line width=1pt] (-6.9,-12.1)--(8.2,-12.1);
-    \draw[-,line width=1pt] (-6.9,6.7)--(-6.9,-12.1);
-    \draw[-,line width=1pt] (8.2,6.7)--(8.2,-12.1);
+    \draw[-,line width=1pt] (-6.7,6.7)--(8.6,6.7);%画内框
+    \draw[-,line width=1pt] (-6.7,-12.1)--(8.6,-12.1);
+    \draw[-,line width=1pt] (-6.7,6.7)--(-6.7,-12.1);
+    \draw[-,line width=1pt] (8.6,6.7)--(8.6,-12.1);
     %
-    \draw[-,line width=1pt] (-5.73846153846154,6.7)--(-5.73846153846154,-12.1);
-    \draw[-,line width=1pt] (-4.57692307692308,6.7)--(-4.57692307692308,-12.1);
-    \draw[-,line width=1pt] (-3.41538461538462,6.7)--(-3.41538461538462,-12.1);
-    \draw[-,line width=1pt] (-2.25384615384616,6.7)--(-2.25384615384616,-12.1);
-    \draw[-,line width=1pt] (-1.09230769230769,6.7)--(-1.09230769230769,-12.1);
-    \draw[-,line width=1pt] (0.0692307692307672,6.7)--(0.0692307692307672,-12.1);
-    \draw[-,line width=1pt] (1.23076923076923,6.7)--(1.23076923076923,-12.1);
-    \draw[-,line width=1pt] (2.39230769230769,6.7)--(2.39230769230769,-12.1);
-    \draw[-,line width=1pt] (3.55384615384615,6.7)--(3.55384615384615,-12.1);
-    \draw[-,line width=1pt] (4.71538461538461,6.7)--(4.71538461538461,-12.1);
-    \draw[-,line width=1pt] (5.87692307692307,6.7)--(5.87692307692307,-12.1);
-    \draw[-,line width=1pt] (7.03846153846153,6.7)--(7.03846153846153,-12.1);          
+    \draw[->] (-5.52307692307692,6.7)--(-5.52307692307692,-12.1);
+\draw[->] (-4.34615384615385,6.7)--(-4.34615384615385,-12.1);
+\draw[->] (-3.16923076923077,6.7)--(-3.16923076923077,-12.1);
+\draw[->] (-1.99230769230769,6.7)--(-1.99230769230769,-12.1);
+\draw[->] (-0.815384615384615,6.7)--(-0.815384615384615,-12.1);
+\draw[->] (0.361538461538462,6.7)--(0.361538461538462,-12.1);
+\draw[->] (1.53846153846154,6.7)--(1.53846153846154,-12.1);
+\draw[->] (2.71538461538462,6.7)--(2.71538461538462,-12.1);
+\draw[->] (3.89230769230769,6.7)--(3.89230769230769,-12.1);
+\draw[->] (5.06923076923077,6.7)--(5.06923076923077,-12.1);
+\draw[->] (6.24615384615385,6.7)--(6.24615384615385,-12.1);
+\draw[->] (7.42307692307693,6.7)--(7.42307692307693,-12.1);
   \end{tikzpicture}
   }
 }%
@@ -511,18 +568,20 @@ chapter/afterskip = 12pt
   \end{flushright}
 \end{titlepage}
 
-\pagestyle{plain}
-\setcounter{page}{1}
-\fontsize{18}{30}\selectfont
-%\newpage\NoBgThispage
-\tableofcontents
-
-%\clearpage
 \pagestyle{fancyplain}
 \setcounter{page}{1}
+\fontsize{18}{30}\selectfont
 \begin{withgezhu}
-  \input{text/testtext.tex}
+  \input{text/forward.tex}
 \end{withgezhu}
+
+
+
+\clearpage
+\pagestyle{plain}
+\setcounter{page}{1}
+%\newpage\NoBgThispage
+\tableofcontents
 
 
 \newgeometry{twoside,left=8cm,right=2cm,asymmetric=true,marginparwidth={4.5cm},marginparsep={15mm}}
@@ -533,7 +592,8 @@ chapter/afterskip = 12pt
 \renewcommand\baselinestretch{1.1}\selectfont
 
 
-
+%%%%%%%%%%%%测试页面Hook
+%\def\pageboxfronthook{\hbox{\fontsize{18pt}{30}\selectfont{匚}}\vfill \hbox to\hsize{\hfill NULL\hfill}\vfill}
 
 \begin{withgezhu}
   \setcounter{page}{1}
@@ -542,18 +602,19 @@ chapter/afterskip = 12pt
   %\newpage
   \AddEverypageHook{%此后每页都添加网格
   \BgMaterial
+  % \coffeestainA{0.9}{0.85}{-25}{5cm}{1.3cm}
+  % \coffeestainD{0.4}{0.5}{90}{3 cm}{4 cm}
   }
-  \input{text/testtext1.tex}
 
-  
+  \input{text/maintext.tex}
 \end{withgezhu}
 
-\clearpage\cleardoublepage
-\newpage
-\pagestyle{fancyplain2}
-\newgeometry{twoside,landscape,left=3cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
-\begin{withgezhu}
-\input{text/testtext2.tex}
-\end{withgezhu}
+% \clearpage\cleardoublepage
+% \newpage
+% \pagestyle{fancyplain2}
+% \newgeometry{twoside,landscape,left=3cm,right=2cm,asymmetric=true,marginparwidth={0cm},marginparsep={15mm}}
+% \begin{withgezhu}
+% \input{text/testtext2.tex}
+% \end{withgezhu}
 %\restoregeometry
 \end{document}
