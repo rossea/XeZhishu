@@ -1,4 +1,4 @@
-# 项目说明：（仍存在较大问题，无法正常使用）
+# 项目说明：（无法正常使用-不再测试-不再更新）
 ## 背景
 * latex中文直书目前主要使用uplatex和xelatex。uplatex基于日文直排的传统，相对比较成熟，主要问题是大部分模板都是基于jlreq规范，与传统中文的排版有一定差别。另外uplatex的字体配置确实比较复杂。相关割注包对跨行割注都需要手工调整，比较痛苦。多年来一直感觉比较遗憾。
 * xelatex在CJK环境下有很多应用。且字体配置相对方便。
@@ -39,7 +39,12 @@ OSFONTDIR = /usr/share/fonts//;/usr/local/share/fonts//;~/.fonts//
 
 
 ## 编译环境
-* XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021)
+* XeTeX 3.141592653-2.6-0.999993 (TeX Live 2021) in Ubuntu20.04(5.4.72-microsoft-standard-WSL2)
 * 使用fontawesome字体显示特殊符号
 * 主要字体使用SourceHanSansSC。后备字体为SourceHanSansTC
 * 需要编译两遍：xelatex main && xelatex main
+
+## 阶段性结论
+根据目前ctex、gezhu在xelatex下对中文直书的支持程度和兼容性，实现中文直书的排版仍需要大量的工作。这些工作抵消了xelatex中文字体配置的便利。
+
+目前成熟度比较高的方案还是uplatex下基于jlreq、等日文书籍的宏包。其中，jlreq基本可以直接使用。
